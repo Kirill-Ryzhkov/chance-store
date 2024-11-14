@@ -4,12 +4,57 @@
 
 .light {
     --background: rgb(255, 255, 255);
+    --backgroundDiff: rgb(17, 24, 39);
     --colorPrimary: rgb(31 41 55);
-    --colorSecond: rgb(107 114 128);
+    --colorSecond: rgb(230, 230, 230);
+    --shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .dark {
     --background: rgb(17, 24, 39);
+    --backgroundDiff: rgb(255, 255, 255);
     --colorPrimary: rgb(230, 230, 230);
-    --colorSecond: rgb(215, 215, 215);
+    --colorSecond: rgb(31 41 55);
+    --shadow: 0px 4px 15px rgba(255, 255, 255, 0.1);
+}
+
+.form-radio {
+    width: 24px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    border-color: var(--backgroundDiff);
+    position: relative;
+}
+
+.title-font {
+    font-family: "Fugaz One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.body-font {
+    font-family: "Farsan", cursive;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.regular-bold-font {
+    font-family: "Afacad Flux", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
+    font-variation-settings:
+        "slnt" 0;
+}
+
+.regular-not-bold-font {
+    font-family: "Afacad Flux", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-variation-settings:
+        "slnt" 0;
 }

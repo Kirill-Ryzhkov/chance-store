@@ -10,8 +10,12 @@ module.exports = {
       '2xl': '2560px'
     },
     extend: {
+      boxShadow: {
+        custom: "var(--shadow)"
+      },
       colors: {
         background: "var(--background)",
+        backgroundDiff: "var(--backgroundDiff)",
         colorPrimary: "var(--colorPrimary)",
         colorSecond: "var(--colorSecond)"
       }
