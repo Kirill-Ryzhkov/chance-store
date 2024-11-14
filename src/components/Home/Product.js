@@ -28,7 +28,9 @@ export default function Product ({ page }) {
                 <ProductTitle page={page} />
                 <div className="p-4 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                     {productList.map((item, index) => (
-                        <Link to={item.name.toLowerCase()}><ProductTile key={index} item={item}/></Link>
+                        <Link key={index} to={item.name.toLowerCase()}>
+                            <ProductTile item={item}/>
+                        </Link>
                     ))}
                 </div>
             </div>

@@ -75,33 +75,33 @@ export default function CardBody ({ product }) {
 
     return (
         <>
-        {showNotification && (
-            <>
-                <div className="fixed h-screen inset-0 bg-black opacity-50 z-40"></div>
-                
-                <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 bg-green-500 text-white py-2 px-6 rounded-md shadow-md z-50">
-                    Your order has been added to the cart!
-                </div>
-            </>
-        )}
-        <div className="relative md:px-10 px-6 md:mt-6 mt-3 pb-12 flex flex-col md:flex-row space-y-6 md:space-y-0">
+            {showNotification && (
+                <>
+                    <div className="fixed h-screen inset-0 bg-black opacity-50 z-40"></div>
+                    
+                    <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 bg-green-500 text-white py-2 px-6 rounded-md shadow-md z-50">
+                        Your order has been added to the cart!
+                    </div>
+                </>
+            )}
+            <div className="relative md:px-10 px-6 mt-3 pb-12 flex flex-col md:flex-row space-y-6 md:space-y-0">
 
-            <div className="md:w-1/2 flex flex-col space-y-4">
-                <CardMain product={product} />
-                <ProductCounter count={count} increment={increment} decrement={decrement}/>
-            </div>
-
-            <div className="md:w-1/2 flex flex-col space-y-4">
-                <div ref={coffeeRef}>
-                    <TypeCoffee coffeeType={coffeeType} setCoffeeType={handleSetCoffeeType} error={error} />
+                <div className="md:w-1/2 flex flex-col space-y-4">
+                    <CardMain product={product} />
+                    <ProductCounter count={count} increment={increment} decrement={decrement}/>
                 </div>
-                <UnderLine />
-                <SyrupList syrupType={syrupType} setSyrupType={setSyrupType}/>
-                <UnderLine />
-                <AddOnsList addOnsType={addOnsType} setAddOnsType={setAddOnsType}/>
-                <AddToCartButton onClick={handleAddToCart} />
+
+                <div className="md:w-1/2 flex flex-col space-y-4">
+                    <div ref={coffeeRef}>
+                        <TypeCoffee coffeeType={coffeeType} setCoffeeType={handleSetCoffeeType} error={error} />
+                    </div>
+                    <UnderLine />
+                    <SyrupList syrupType={syrupType} setSyrupType={setSyrupType}/>
+                    <UnderLine />
+                    <AddOnsList addOnsType={addOnsType} setAddOnsType={setAddOnsType}/>
+                    <AddToCartButton onClick={handleAddToCart} />
+                </div>
             </div>
-        </div>
         </>
     )
 }
