@@ -10,7 +10,6 @@ export default function Header({ page }) {
     const [screenWidth, setScreenWidth] = useState(window.innerWidth);
     const iconSize = screenWidth < 768 ? 22 : 27;
     const nextPage = page === "merch" ? "cafe" : "merch";
-    const currentUrl = window.location.pathname.split("/")[1];
 
     const toggleTheme = () => {
         const newTheme = theme === 'light' ? 'dark' : 'light';
@@ -35,7 +34,7 @@ export default function Header({ page }) {
                 
                 
                 <div className="md:w-1/6 lg:w-1/12 w-1/5">
-                    <Link to={`/${currentUrl}`}><img alt='Logo' src={ theme === "light" ? LogoBlack : LogoWhite } /> </Link> 
+                    <Link to={`/${page}`}><img alt='Logo' src={ theme === "light" ? LogoBlack : LogoWhite } /> </Link> 
                 </div>
 
                 <div className="md:flex space-x-6">
@@ -45,7 +44,9 @@ export default function Header({ page }) {
                     <button className="text-colorPrimary" onClick={toggleTheme}>
                         {theme === 'light' ? <MdDarkMode size={iconSize}/> : <MdOutlineLightMode size={iconSize}/>}
                     </button>
-                    <button className="text-colorPrimary"><FaShoppingCart size={iconSize}/></button>
+                    <Link to={`/cart/${page}`}>
+                        <button className="text-colorPrimary"><FaShoppingCart size={iconSize}/></button>
+                    </Link>
                 </div>
             </div>
         </nav>

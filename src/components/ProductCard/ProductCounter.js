@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { FaPlus, FaMinus } from "react-icons/fa6";
 
 export default function ProductCounter({ count, increment, decrement }) {

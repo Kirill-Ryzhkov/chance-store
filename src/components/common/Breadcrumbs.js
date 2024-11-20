@@ -1,5 +1,4 @@
 import React from "react";
-import { FaLongArrowAltRight } from "react-icons/fa";
 import { TbSlashes } from "react-icons/tb";
 import { Link } from "react-router-dom";
 

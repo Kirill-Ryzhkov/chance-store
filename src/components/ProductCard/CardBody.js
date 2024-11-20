@@ -5,7 +5,7 @@ import CardMain from './CardMain';
 import SyrupList from './SyrupList';
 import TypeCoffee from './TypeCoffee';
 import AddOnsList from './AddOnsList';
-import AddToCartButton from '../common/AddToCartButton';
+import GreenButton from '../common/GreenButton';
 
 export default function CardBody ({ product }) {
     //coffee type
@@ -35,21 +35,22 @@ export default function CardBody ({ product }) {
         } else {
             setError(false);
 
-            let cart = JSON.parse(localStorage.getItem("cart"));
+            let cart = JSON.parse(localStorage.getItem("cart_cafe"));
             if (!Array.isArray(cart)) {
                 cart = [];
             }
 
-            const newOrder = { product, coffeeType, syrupType, addOnsType, count };
+            const id = Math.random().toString(16).slice(2);
+            const newOrder = { id, name: product, type: coffeeType, syrup: syrupType, addon: addOnsType, count, price: 3.00 };
 
             let orderExists = false;
 
             cart.forEach(element => {
                 if (
-                    element.product === newOrder.product &&
-                    element.coffeeType === newOrder.coffeeType &&
-                    element.syrupType === newOrder.syrupType &&
-                    element.addOnsType === newOrder.addOnsType
+                    element.name === newOrder.name &&
+                    element.type === newOrder.type &&
+                    element.syrup === newOrder.syrup &&
+                    element.addon === newOrder.addon
                 ) {
                     element.count += newOrder.count;
                     orderExists = true;
@@ -60,8 +61,7 @@ export default function CardBody ({ product }) {
                 cart.push(newOrder);
             }
 
-            localStorage.setItem("cart", JSON.stringify(cart));
-            console.log("Added to cart:", { product, coffeeType, syrupType, addOnsType, count });
+            localStorage.setItem("cart_cafe", JSON.stringify(cart));
 
             setShowNotification(true);
             setTimeout(() => setShowNotification(false), 3000);
@@ -99,7 +99,7 @@ export default function CardBody ({ product }) {
                     <SyrupList syrupType={syrupType} setSyrupType={setSyrupType}/>
                     <UnderLine />
                     <AddOnsList addOnsType={addOnsType} setAddOnsType={setAddOnsType}/>
-                    <AddToCartButton onClick={handleAddToCart} />
+                    <GreenButton onClick={handleAddToCart} text={"Add to Cart"} />
                 </div>
             </div>
         </>
