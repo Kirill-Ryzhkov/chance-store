@@ -4,7 +4,7 @@ import { TiTick } from "react-icons/ti";
 export default function SquareRadioButton({ checked, onChange }) {
     return (
         <span
-            onClick={onChange}
+            onClick={() => onChange()}
             className={`form-radio w-6 h-6 border-2 rounded-md flex items-center justify-center cursor-pointer ${
                 checked ? 'bg-backgroundDiff text-background' : 'bg-background text-colorPrimary'
             }`}

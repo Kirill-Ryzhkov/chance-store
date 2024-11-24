@@ -2,56 +2,63 @@ import React, { useState, useRef } from 'react';
 import ProductCounter from './ProductCounter';
 import UnderLine from '../common/UnderLine';
 import CardMain from './CardMain';
-import SyrupList from './SyrupList';
-import TypeCoffee from './TypeCoffee';
-import AddOnsList from './AddOnsList';
 import GreenButton from '../common/GreenButton';
+import ExtraField from './ExtraField';
 
-export default function CardBody ({ product }) {
-    //coffee type
-    const [coffeeType, setCoffeeType] = useState(null);
-    const [error, setError] = useState(false);
-    const coffeeRef = useRef(null);
+export default function CardBody ({ data }) {
+    const [errorFields, setErrorFields] = useState({});
 
-    //syrups
-    const [syrupType, setSyrupType] = useState('none');
-
-    //add-ons
-    const [addOnsType, setAddOnsType] = useState('none');
-
-    //counter
     const [count, setCount] = useState(1);
-
     const increment = () => setCount(prevCount => prevCount + 1);
     const decrement = () => setCount(prevCount => (prevCount > 1 ? prevCount - 1 : 1));
 
-    //notification
+    const [fieldList, setFieldList] = useState({});
+
     const [showNotification, setShowNotification] = useState(false);
 
-    const handleAddToCart = () => {
-        if (!coffeeType) {
-            setError(true);
-            coffeeRef.current.scrollIntoView({ behavior: 'smooth' });
-        } else {
-            setError(false);
+    const fieldRefs = useRef({});
 
-            let cart = JSON.parse(localStorage.getItem("cart_cafe"));
+    const handleAddToCart = () => {
+        const cartName = `cart_${data?.item?.type}`;
+
+        const newErrorFields = {};
+        let hasError = false;
+
+        data?.fields.forEach((field) => {
+            if (!fieldList[field.field_name]) {
+                newErrorFields[field.field_name] = true;
+                hasError = true;
+            } else {
+                newErrorFields[field.field_name] = false;
+            }
+        });
+
+        setErrorFields(newErrorFields);
+
+        if (hasError) {
+            const firstErrorField = data?.fields.find((field) => !fieldList[field.field_name]);
+            fieldRefs.current[firstErrorField.field_name]?.scrollIntoView({ behavior: 'smooth' });
+        } else {
+            let cart = JSON.parse(localStorage.getItem(cartName));
             if (!Array.isArray(cart)) {
                 cart = [];
             }
 
-            const id = Math.random().toString(16).slice(2);
-            const newOrder = { id, name: product, type: coffeeType, syrup: syrupType, addon: addOnsType, count, price: 3.00 };
+            const newOrder = { 
+                name: data?.item?.name, 
+                count,
+                ...fieldList
+            };
 
             let orderExists = false;
 
             cart.forEach(element => {
-                if (
-                    element.name === newOrder.name &&
-                    element.type === newOrder.type &&
-                    element.syrup === newOrder.syrup &&
-                    element.addon === newOrder.addon
-                ) {
+                const isSameOrder = Object.keys(newOrder).every(key => {
+                    if (key === 'count') return true;
+                    return element[key] === newOrder[key];
+                });
+
+                if (isSameOrder) {
                     element.count += newOrder.count;
                     orderExists = true;
                 }
@@ -61,17 +68,12 @@ export default function CardBody ({ product }) {
                 cart.push(newOrder);
             }
 
-            localStorage.setItem("cart_cafe", JSON.stringify(cart));
+            localStorage.setItem(cartName, JSON.stringify(cart));
 
             setShowNotification(true);
             setTimeout(() => setShowNotification(false), 3000);
         }
     };
-
-    const handleSetCoffeeType = (type) => {
-        setCoffeeType(type);
-        setError(false);
-    }
 
     return (
         <>
@@ -87,18 +89,26 @@ export default function CardBody ({ product }) {
             <div className="relative md:px-10 px-6 mt-3 pb-12 flex flex-col md:flex-row space-y-6 md:space-y-0">
 
                 <div className="md:w-1/2 flex flex-col space-y-4">
-                    <CardMain product={product} />
+                    <CardMain product={data?.item} />
                     <ProductCounter count={count} increment={increment} decrement={decrement}/>
                 </div>
 
                 <div className="md:w-1/2 flex flex-col space-y-4">
-                    <div ref={coffeeRef}>
-                        <TypeCoffee coffeeType={coffeeType} setCoffeeType={handleSetCoffeeType} error={error} />
-                    </div>
-                    <UnderLine />
-                    <SyrupList syrupType={syrupType} setSyrupType={setSyrupType}/>
-                    <UnderLine />
-                    <AddOnsList addOnsType={addOnsType} setAddOnsType={setAddOnsType}/>
+
+                    {data?.fields.map((item, index) => (
+                        <React.Fragment key={index}>
+                            <div ref={(el) => (fieldRefs.current[item.field_name] = el)}>
+                                <ExtraField 
+                                    field={item} 
+                                    setFieldList={setFieldList} 
+                                    fieldList={fieldList} 
+                                    error={errorFields[item.field_name]}
+                                    setError={setErrorFields}
+                                />
+                            </div>
+                            <UnderLine />
+                        </React.Fragment>
+                    ))}
                     <GreenButton onClick={handleAddToCart} text={"Add to Cart"} />
                 </div>
             </div>

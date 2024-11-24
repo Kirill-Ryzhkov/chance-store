@@ -11,7 +11,7 @@ function App() {
           <Route path='/' element={<Navigate to='/cafe' />} />
           <Route path='/cafe' element={<Home page={"cafe"} />} />
           <Route path='/merch' element={<Home page={"merch"} />} />
-          <Route path='/cafe/:name' element={<ProductCard page="cafe"/>} />
+          <Route path='/cafe/:slug' element={<ProductCard page="cafe"/>} />
 
           <Route path='/cart/:page' element={<Cart />} />
         </Routes>
