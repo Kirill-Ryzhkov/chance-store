@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { RiDeleteBinLine } from "react-icons/ri";
 import ProductCounter from "../ProductCard/ProductCounter";
 
-export default function CartTileDesktop({ item, index, setCart }) {
+export default function CartTileDesktop({ item, fields, index, setCart }) {
 
     const [count, setCount] = useState(item.count);
 
@@ -42,9 +42,12 @@ export default function CartTileDesktop({ item, index, setCart }) {
             <div className="pb-2 flex justify-center items-center space-x-2">
                 <ProductCounter count={count} increment={increment} decrement={decrement}/>
             </div>
-            <td className="py-3 px-1">{item.type}</td>
-            <td className="py-3 px-1">{item.syrup}</td>
-            <td className="py-3 px-1">{item.addon}</td>
+
+            {fields?.map((field, indexField) => (
+                <td key={indexField} className="py-3 px-1">
+                    {item[field] || "-"}
+                </td>
+            ))}
             <td className="py-3 px-1 font-bold">${(item.count * item.price).toFixed(2)}</td>
             <td className="py-3 px-1 flex justify-center">
                 <button>

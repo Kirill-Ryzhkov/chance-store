@@ -7,7 +7,7 @@ export default function ProductCard ({ page }) {
 
     const { slug } = useParams();
 
-    const { data } = useFetch(`/store/single/${page}/${slug}`);
+    const data = useFetch(`/store/single/${page}/${slug}`);
 
     return (
         <div className="bg-background min-h-screen text-colorPrimary flex">
