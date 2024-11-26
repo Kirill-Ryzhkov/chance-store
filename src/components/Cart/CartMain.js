@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import useFetch from "../../hooks/useFetch";
 import CartTable from "./CartTable";
 import CartTileMobile from "./CartTileMobile";
 import GreenButton from "../common/GreenButton";
@@ -13,15 +14,7 @@ export default function CartMain ({ cart, page, setCart }) {
         console.log("hello");
     };
 
-    const cafeFields = [
-        'name',
-        'count',
-        'type',
-        'syrup',
-        'add-on',
-        'price',
-        'delete'
-    ];
+    const cafeFields = useFetch(`/store/field/list/${page}`);
 
     useEffect(() => {
         const handleResize = () => setScreenWidth(window.innerWidth);
@@ -44,7 +37,7 @@ export default function CartMain ({ cart, page, setCart }) {
                 ) : (
                     <div className="flex flex-col w-4/5">
                         <ProductTitle page={"Cart"} />
-                        <CartTable fields={cafeFields} cart={cart} setCart={setCart}/>
+                        <CartTable fields={cafeFields?.fields} cart={cart} setCart={setCart}/>
                         <div className="w-full mt-4">
                             <GreenButton onClick={handleCheckout} text={"Checkout"} />
                         </div>

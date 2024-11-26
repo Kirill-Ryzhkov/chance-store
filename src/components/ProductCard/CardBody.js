@@ -47,7 +47,8 @@ export default function CardBody ({ data }) {
             const newOrder = { 
                 name: data?.item?.name, 
                 count,
-                ...fieldList
+                ...fieldList,
+                price: data?.item?.price
             };
 
             let orderExists = false;

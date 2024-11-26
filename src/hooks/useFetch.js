@@ -10,28 +10,37 @@ const useFetch = (url, method = "GET", body = {}) => {
   useEffect(() => {
     if (!url) return;
 
-    const fetchData = async () => {
-      setIsLoading(true);
-      setError(null);
+    let options = {};
 
-      try {
-        const response = await fetch(API_URL + url);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+    if (method === "POST") {
+        options.method = "POST";
+        options.body = body;
+    } else {
+        options.method = method;
+    }
+
+    const fetchData = async () => {
+        setIsLoading(true);
+        setError(null);
+
+        try {
+            const response = await fetch(API_URL + url, options);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const result = await response.json();
+            setData(result);
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setIsLoading(false);
         }
-        const result = await response.json();
-        setData(result);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setIsLoading(false);
-      }
     };
 
     fetchData();
   }, [url]);
 
-  return { data, error, isLoading };
+  return data;
 };
 
 export default useFetch;
