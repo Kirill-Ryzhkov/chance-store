@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import useFetch from "../../hooks/useFetch";
 import CartTable from "./CartTable";
 import CartTileMobile from "./CartTileMobile";
 import GreenButton from "../common/GreenButton";
@@ -7,14 +6,17 @@ import ProductTitle from "../common/ProductTitle";
 import UnderLine from "../common/UnderLine";
 import EmptyCart from "./EmptyCart";
 import { useGetStoreFieldsQuery } from "../../services/redux/apiSlice";
+import { useNavigate } from "react-router-dom";
 
 export default function CartMain({ cart, page, setCart }) {
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+  const navigate = useNavigate();
 
   const { data: cafeFields, isLoading, isError } = useGetStoreFieldsQuery(page);
-
   const handleCheckout = () => {
     console.log("Checkout button clicked");
+    navigate(`/cart/${page}/checkout`, { state: { cart } });
+    console.log(cart[0].addon);
   };
 
   useEffect(() => {
@@ -27,7 +29,7 @@ export default function CartMain({ cart, page, setCart }) {
   if (isError) return <div>Error loading data</div>;
 
   return (
-    <div className="md:mt-28 mt-20 w-full flex justify-center h-fit">
+    <div className="w-full flex justify-center h-fit">
       {cart.length > 0 ? (
         screenWidth < 768 ? (
           <div className="flex flex-col w-full space-y-4 px-4">
