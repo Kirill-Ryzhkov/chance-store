@@ -15,7 +15,7 @@ export default function CartMain({ cart, page, setCart }) {
   const { data: cafeFields, isLoading, isError } = useGetStoreFieldsQuery(page);
   const handleCheckout = () => {
     console.log("Checkout button clicked");
-    navigate(`/cart/${page}/checkout`, { state: { cart } });
+    navigate(`/checkout/${page}`, { state: { cart } });
     console.log(cart[0].addon);
   };
 
@@ -40,6 +40,7 @@ export default function CartMain({ cart, page, setCart }) {
                 key={index}
                 item={item}
                 index={index}
+                fields={cafeFields?.fields}
                 setCart={setCart}
               />
             ))}

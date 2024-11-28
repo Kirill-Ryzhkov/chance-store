@@ -1,36 +1,26 @@
-import React from "react";
-import { useLocation } from "react-router-dom";
+import React, { useEffect, useMemo } from "react";
+import { useLocation, useParams } from "react-router-dom";
+import CheckoutMain from "../components/Checkout/CheckoutMain";
+import { useGetStoreTransactionMutation } from "../services/redux/apiSlice";
 
 export default function CheckoutPage() {
   const location = useLocation();
-  const cart = location.state?.cart || []; // Получаем данные корзины из состояния
+  const cart = useMemo(() => location.state?.cart || [], [location.state?.cart]);
+  const { page } = useParams();
 
-  const totalAmount = cart.reduce(
-    (total, item) => total + item.price * item.count,
-    0
-  );
+  const [getStoreTransaction, { data, isLoading, isError }] =
+    useGetStoreTransactionMutation();
+
+  useEffect(() => {
+    getStoreTransaction({ cart });
+  }, [cart, getStoreTransaction]);
+
+  if (isLoading) return <div>Loading...</div>;
+  if (isError) return <div>Error loading data</div>;
 
   return (
-    <div className="">
-      <div className="order-summary">
-        <h2>Order Summary</h2>
-        {cart.map((item, index) => (
-          <div key={index}>
-            <p>{item.name}</p>
-            <p>{item.type}</p>
-            <p>{item.syrup}</p>
-            <p> {item.addon}</p>
-
-            <p>
-              {item.count} x ${item.price}
-            </p>
-            <p>-------------</p>
-          </div>
-        ))}
-
-        <h3>Total: ${totalAmount.toFixed(2)}</h3>
-        <div>тутуту пупупу оплата</div>
-      </div>
+    <div className="bg-background min-h-screen text-colorPrimary flex">
+      <CheckoutMain page={page} cart={cart} transaction={data}/>
     </div>
   );
 }
