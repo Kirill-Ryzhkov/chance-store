@@ -44,7 +44,9 @@ export default function CartMain({ cart, page, setCart }) {
                 setCart={setCart}
               />
             ))}
-            <GreenButton onClick={handleCheckout} text={"Checkout"} />
+            <div className="sticky mt-2 bottom-2 right-0">
+              <GreenButton onClick={handleCheckout} text={"Checkout"} />
+            </div>
           </div>
         ) : (
           <div className="flex flex-col w-4/5">
@@ -54,7 +56,7 @@ export default function CartMain({ cart, page, setCart }) {
               cart={cart}
               setCart={setCart}
             />
-            <div className="w-full mt-4">
+            <div className="w-full mt-4 sticky mt-2 bottom-2 right-0">
               <GreenButton onClick={handleCheckout} text={"Checkout"} />
             </div>
           </div>
