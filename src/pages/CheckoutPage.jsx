@@ -20,7 +20,7 @@ export default function CheckoutPage() {
 
   return (
     <div className="bg-background min-h-screen text-colorPrimary flex">
-      <CheckoutMain page={page} cart={cart} transaction={data}/>
+      <CheckoutMain cart={cart} transaction={data}/>
     </div>
   );
 }

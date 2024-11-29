@@ -1,10 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_TEST_KEY);
 const API_URL = process.env.REACT_APP_API_URL;
 
-export default function CheckoutMain ({ page, cart, transaction }) {
+export default function CheckoutMain ({ cart, transaction }) {
     const checkoutRef = useRef(null);
 
     useEffect(() => {
@@ -26,8 +26,6 @@ export default function CheckoutMain ({ page, cart, transaction }) {
                 const expressCheckoutElement = elements.create('expressCheckout');
                 expressCheckoutElement.mount(checkoutRef.current);
                 expressCheckoutElement.on('confirm', function (event) {
-                    console.log("onConfirm triggered");
-
                     stripe.confirmPayment({
                         elements,
                         clientSecret: transaction?.clientSecret,
