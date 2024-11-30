@@ -3,9 +3,8 @@ import { useNavigate } from "react-router-dom";
 import ProductCounter from './ProductCounter';
 import UnderLine from '../common/UnderLine';
 import CardMain from './CardMain';
-import GreenButton from '../common/GreenButton';
+import Button from '../common/Button';
 import ExtraField from './ExtraField';
-import YellowButton from '../common/YellowButton';
 
 export default function CardBody ({ data, page }) {
     const navigate = useNavigate();
@@ -138,8 +137,8 @@ export default function CardBody ({ data, page }) {
                         </React.Fragment>
                     ))}
                     <div className="sticky mt-2 bottom-2 right-0">
-                        <GreenButton onClick={handleAddToCart} text={"Add to Cart"} />
-                        <YellowButton onClick={handleBuyNow} text={"Buy now"} />
+                        <Button onClick={handleAddToCart} text={"Add to Cart"} color={"bg-green-500"}/>
+                        <Button onClick={handleBuyNow} text={"Buy now"} color={"bg-yellow-400"}/>
                     </div>
                     
                 </div>

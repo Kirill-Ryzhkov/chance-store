@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import CartTable from "./CartTable";
 import CartTileMobile from "./CartTileMobile";
-import GreenButton from "../common/GreenButton";
+import Button from "../common/Button";
 import ProductTitle from "../common/ProductTitle";
 import UnderLine from "../common/UnderLine";
 import EmptyCart from "./EmptyCart";
@@ -14,9 +14,7 @@ export default function CartMain({ cart, page, setCart }) {
 
   const { data: cafeFields, isLoading, isError } = useGetStoreFieldsQuery(page);
   const handleCheckout = () => {
-    console.log("Checkout button clicked");
     navigate(`/checkout/${page}`, { state: { cart } });
-    console.log(cart[0].addon);
   };
 
   useEffect(() => {
@@ -45,7 +43,7 @@ export default function CartMain({ cart, page, setCart }) {
               />
             ))}
             <div className="sticky mt-2 bottom-2 right-0">
-              <GreenButton onClick={handleCheckout} text={"Checkout"} />
+              <Button onClick={handleCheckout} text={"Checkout"} color={"bg-green-500"}/>
             </div>
           </div>
         ) : (
@@ -57,7 +55,7 @@ export default function CartMain({ cart, page, setCart }) {
               setCart={setCart}
             />
             <div className="w-full mt-4 sticky mt-2 bottom-2 right-0">
-              <GreenButton onClick={handleCheckout} text={"Checkout"} />
+              <Button onClick={handleCheckout} text={"Checkout"} color={"bg-green-500"}/>
             </div>
           </div>
         )

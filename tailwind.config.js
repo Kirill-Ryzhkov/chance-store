@@ -24,6 +24,20 @@ module.exports = {
       }
     }
   },
-  plugins: [],
+  safelist: [
+    'bg-lime-400',
+    'bg-green-400',
+    'bg-orange-400',
+    'bg-yellow-400',
+    'bg-blue-400',
+    'bg-lime-500',
+    'bg-green-500',
+    'bg-orange-500',
+    'bg-yellow-500',
+    'bg-blue-500',
+],
+  plugins: [
+    require('tailwindcss-textshadow')
+  ],
 }
 

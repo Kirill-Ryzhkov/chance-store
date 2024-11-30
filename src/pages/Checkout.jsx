@@ -3,10 +3,11 @@ import { useLocation, useParams } from "react-router-dom";
 import CheckoutMain from "../components/Checkout/CheckoutMain";
 import { useGetStoreTransactionMutation } from "../services/redux/apiSlice";
 
-export default function CheckoutPage() {
+export default function Checkout() {
   const location = useLocation();
   const cart = useMemo(() => location.state?.cart || [], [location.state?.cart]);
   const { page } = useParams();
+  localStorage.setItem(`cart_${page}`, "[]");
 
   const [getStoreTransaction, { data, isLoading, isError }] =
     useGetStoreTransactionMutation();
