@@ -8,8 +8,8 @@ export default function CheckoutMain ({ cart, transaction }) {
 
     useEffect(() => {
         const initialize = async () => {
-            if (!transaction?.clientSecret || !transaction?.paymentIntentId) {
-                console.error("Missing transaction data: clientSecret or paymentIntentId");
+            if (!transaction?.clientSecret) {
+                console.error("Missing clientSecret");
                 return;
             }
 
@@ -21,22 +21,47 @@ export default function CheckoutMain ({ cart, transaction }) {
                     theme: 'flat',
                 },
             });
+
+            const paymentRequest = stripe.paymentRequest({
+                country: 'US',
+                currency: 'usd',
+                total: {
+                    label: 'Total',
+                    amount: transaction.total * 100
+                },
+                requestPayerName: true,
+                requestPayerEmail: true,
+            });
+
+            paymentRequest.canMakePayment().then((result) => {
+                if (result) {
+                    const prButton = elements.create('paymentRequestButton', {
+                        paymentRequest,
+                    });
+                    prButton.mount(checkoutRef.current);
+                } else {
+                    checkoutRef.current.style.display = 'none';
+                }
+            });
+        
+
             if (checkoutRef.current) {
-                const expressCheckoutElement = elements.create('expressCheckout');
-                expressCheckoutElement.mount(checkoutRef.current);
-                expressCheckoutElement.on('confirm', function (event) {
-                    stripe.confirmPayment({
+                paymentRequest.on('paymentmethod', async (ev) => {
+                    const { error } = await stripe.confirmPayment({
                         elements,
-                        clientSecret: transaction?.clientSecret,
                         confirmParams: {
-                          return_url: 'http://localhost:3000/final',
+                            return_url: 'http://localhost:3000/final',
                         },
-                      })
-                      .then(function(result) {
-                        if (result.error) {
-                          console.log(result.error);
-                        }
-                      });
+                        redirect: 'if_required',
+                    });
+            
+                    if (error) {
+                        ev.complete('fail');
+                        console.error(error);
+                    } else {
+                        ev.complete('success');
+                        window.location.href = 'http://localhost:3000/final';
+                    }
                 });
             }
         }
@@ -68,7 +93,7 @@ export default function CheckoutMain ({ cart, transaction }) {
                     </div>
                 </div>
 
-                <div ref={checkoutRef}></div>
+                <div ref={checkoutRef} id="payment-request-button"></div>
             </div>
         </div>
     );
