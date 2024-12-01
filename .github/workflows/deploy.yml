@@ -1,0 +1,33 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Install dependencies
+      run: |
+        npm ci
+        npm run build
+
+    - name: Deploy to server
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      run: |
+        echo "${SSH_PRIVATE_KEY}" > ssh_key
+        chmod 600 ssh_key
+        ssh -i ssh_key -o StrictHostKeyChecking=no root@31.172.74.48 << 'EOF'
+          export PATH=$PATH:/usr/local/bin:/usr/bin
+          cd /home/chance-store
+          git pull origin main
+          cd /home/chance-store/build
+          cp -r * /var/www/html
+        EOF
