@@ -24,5 +24,5 @@ jobs:
       run: |
         echo "${SSH_PRIVATE_KEY}" > ssh_key
         chmod 600 ssh_key
-        rsync -avz --delete -e "ssh -i ssh_key -o StrictHostKeyChecking=no" ./build/ root@31.172.74.48:/var/www/html
+        rsync -avz --delete-before --progress -e "ssh -i ssh_key -o StrictHostKeyChecking=no" ./build/ root@31.172.74.48:/var/www/html
         rm -f ssh_key
