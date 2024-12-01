@@ -23,7 +23,7 @@ jobs:
       run: |
         echo "${SSH_PRIVATE_KEY}" > ssh_key
         chmod 600 ssh_key
-        ssh -i ssh_key -o StrictHostKeyChecking=no root@31.172.74.48 'EOF'
+        ssh -i ssh_key -o StrictHostKeyChecking=no root@31.172.74.48 << 'EOF'
           cd /home/chance-store
           git pull origin main
           npm install
