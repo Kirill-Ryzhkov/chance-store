@@ -15,7 +15,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        npm ci
+        npm install
         npm run build
 
     - name: Deploy to server
@@ -24,10 +24,5 @@ jobs:
       run: |
         echo "${SSH_PRIVATE_KEY}" > ssh_key
         chmod 600 ssh_key
-        ssh -i ssh_key -o StrictHostKeyChecking=no root@31.172.74.48 << 'EOF'
-          export PATH=$PATH:/usr/local/bin:/usr/bin
-          cd /home/chance-store
-          git pull origin main
-          cd /home/chance-store/build
-          cp -r * /var/www/html
-        EOF
+        rsync -avz -e "ssh -i ssh_key -o StrictHostKeyChecking=no" ./build/ root@31.172.74.48:/var/www/html
+        rm -f ssh_key
