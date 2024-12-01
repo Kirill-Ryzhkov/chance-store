@@ -1,11 +1,14 @@
 import React, { useState, useRef } from 'react';
+import { useNavigate } from "react-router-dom";
 import ProductCounter from './ProductCounter';
 import UnderLine from '../common/UnderLine';
 import CardMain from './CardMain';
-import GreenButton from '../common/GreenButton';
+import Button from '../common/Button';
 import ExtraField from './ExtraField';
 
-export default function CardBody ({ data }) {
+export default function CardBody ({ data, page }) {
+    const navigate = useNavigate();
+
     const [errorFields, setErrorFields] = useState({});
 
     const [count, setCount] = useState(1);
@@ -18,9 +21,7 @@ export default function CardBody ({ data }) {
 
     const fieldRefs = useRef({});
 
-    const handleAddToCart = () => {
-        const cartName = `cart_${data?.item?.type}`;
-
+    const checkFilledFields = () => {
         const newErrorFields = {};
         let hasError = false;
 
@@ -34,6 +35,14 @@ export default function CardBody ({ data }) {
         });
 
         setErrorFields(newErrorFields);
+
+        return hasError;
+    }
+
+    const handleAddToCart = () => {
+        const cartName = `cart_${data?.item?.type}`;
+
+        const hasError = checkFilledFields();
 
         if (hasError) {
             const firstErrorField = data?.fields.find((field) => !fieldList[field.field_name]);
@@ -76,6 +85,23 @@ export default function CardBody ({ data }) {
         }
     };
 
+    const handleBuyNow = () => {
+        const hasError = checkFilledFields();
+
+        if (hasError) {
+            const firstErrorField = data?.fields.find((field) => !fieldList[field.field_name]);
+            fieldRefs.current[firstErrorField.field_name]?.scrollIntoView({ behavior: 'smooth' });
+        } else {
+            const cart = [{
+                name: data?.item?.name, 
+                count,
+                ...fieldList,
+                price: data?.item?.price
+            }];
+            navigate(`/checkout/${page}`, { state: { cart } });
+        }
+    }
+
     return (
         <>
             {showNotification && (
@@ -110,7 +136,11 @@ export default function CardBody ({ data }) {
                             <UnderLine />
                         </React.Fragment>
                     ))}
-                    <GreenButton onClick={handleAddToCart} text={"Add to Cart"} />
+                    <div className="sticky mt-2 bottom-2 right-0">
+                        <Button onClick={handleAddToCart} text={"Add to Cart"} color={"bg-green-500"}/>
+                        <Button onClick={handleBuyNow} text={"Buy now"} color={"bg-yellow-400"}/>
+                    </div>
+                    
                 </div>
             </div>
         </>

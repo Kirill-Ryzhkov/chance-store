@@ -1,15 +1,8 @@
 import React, { useState } from "react";
 import ProductCounter from "../ProductCard/ProductCounter";
 import { RiDeleteBin5Line } from "react-icons/ri";
-import CappuccinoImage from '../../assets/images/cappuccino.webp';
-import LatteImage from '../../assets/images/latte.webp';
 
-const images = {
-    cappuccino: CappuccinoImage,
-    latte: LatteImage,
-}
-
-export default function CartTileMobile({ item, index, setCart }) {
+export default function CartTileMobile({ item, index, fields, setCart }) {
 
     const [count, setCount] = useState(item.count);
 
@@ -46,15 +39,17 @@ export default function CartTileMobile({ item, index, setCart }) {
     return (
         <div className="relative w-full rounded-lg shadow-lg p-4 flex flex-col space-y-4 bg-background text-colorPrimary">   
             <div className="relative">
-                <img src={images[item.name]} alt={item.name} className="w-20 h-20 object-cover rounded" />
-                
+                <h3 className="font-bold text-lg text-colorPrimary">{item.name}</h3>
+                    <p className="text-sm text-colorPrimary">{ fields
+                        .map(field => item[field])
+                        .filter(value => value !== "none")
+                        .join(' · ')
+                    }</p>
                 <button className="absolute top-0 right-0">
                     <RiDeleteBin5Line onClick={handleDelete} size={20} />
                 </button>
             </div>
             <div className="flex-1">
-                <h3 className="font-bold text-lg text-colorPrimary">{item.name}</h3>
-                <p className="text-sm text-colorPrimary">{item.type} · {item.syrup} · {item.addon}</p>
                 <div className="flex items-center justify-between mt-2">
                     <div className="flex items-center space-x-2">
                         <ProductCounter count={count} increment={increment} decrement={decrement}/>

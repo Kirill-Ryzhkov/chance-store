@@ -19,6 +19,20 @@ export const apiSlice = createApi({
     getStoreSingle: builder.query({
       query: ({ page, slug }) => `/store/single/${page}/${slug}`,
     }),
+    getStoreTransaction: builder.mutation({
+      query: ({ cart }) => ({
+        url: `/store/checkout`,
+        method: "POST",
+        body: { cart }
+      })
+    }),
+    getStoreTransactionConfirm: builder.mutation({
+      query: ({ paymentIntentId }) => ({
+        url: `/store/confirm`,
+        method: "POST",
+        body: { paymentIntentId }
+      })
+    })
   }),
 });
 
@@ -26,4 +40,6 @@ export const {
   useGetStoreFieldsQuery,
   useGetStoreMultipleMutation,
   useGetStoreSingleQuery,
+  useGetStoreTransactionMutation,
+  useGetStoreTransactionConfirmMutation
 } = apiSlice;
