@@ -15,6 +15,7 @@ jobs:
 
     - name: Install dependencies
       run: |
+        cd /home/chance-store
         npm install
         npm run build
 
