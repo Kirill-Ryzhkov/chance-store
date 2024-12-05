@@ -14,8 +14,6 @@ export default function CheckoutMain ({ cart, transaction }) {
     const stripeRef = useRef(null);
     const elementsRef = useRef(null);
 
-    console.log(theme);
-
     useEffect(() => {
         
         const initialize = async () => {
@@ -48,8 +46,7 @@ export default function CheckoutMain ({ cart, transaction }) {
     }, [transaction, theme]);
 
     const handlePaymentClick = async () => {
-        console.log(`${APP_URL}/final`);
-        
+    
         if (!stripeRef.current || !elementsRef.current) {
             console.error("Stripe or Elements not initialized");
             return;
@@ -58,7 +55,7 @@ export default function CheckoutMain ({ cart, transaction }) {
             const { error } = await stripeRef.current.confirmPayment({
                 elements: elementsRef.current,
                 confirmParams: {
-                    return_url: `https://thechance.xyz/final`,
+                    return_url: `${APP_URL}/final`,
                 },
             });
 
