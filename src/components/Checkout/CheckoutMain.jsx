@@ -1,17 +1,23 @@
 import React, { useEffect, useRef } from "react";
 import { loadStripe } from "@stripe/stripe-js";
+import { useSelector } from 'react-redux';
 import Button from "../common/Button";
+import ProductTitle from "../common/ProductTitle";
 
 const APP_URL = process.env.REACT_APP_ORIGINAL_URL;
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_TEST_KEY);
 
 export default function CheckoutMain ({ cart, transaction }) {
+    const theme = useSelector((state) => state.theme.theme);
     const paymentElementRef = useRef(null);
     const stripeRef = useRef(null);
     const elementsRef = useRef(null);
 
+    console.log(theme);
+
     useEffect(() => {
+        
         const initialize = async () => {
             if (!transaction) {
                 console.log("Transaction not loaded yet");
@@ -29,8 +35,8 @@ export default function CheckoutMain ({ cart, transaction }) {
             const elements = stripe.elements({
                 clientSecret: transaction?.clientSecret,
                 appearance: {
-                    theme: 'flat',
-                },
+                    theme: theme === "light" ? "flat" : "night"
+                }
             });
             elementsRef.current = elements;
 
@@ -39,7 +45,7 @@ export default function CheckoutMain ({ cart, transaction }) {
         };
 
         initialize();
-    }, [transaction]);
+    }, [transaction, theme]);
 
     const handlePaymentClick = async () => {
         console.log(`${APP_URL}/final`);
@@ -67,34 +73,40 @@ export default function CheckoutMain ({ cart, transaction }) {
     return (
         <div className="min-h-svh w-full flex justify-center">
             <div className="md:w-4/5 w-full h-full shadow-lg">
-                <div className="">
-                    <div className="order-summary">
-                        <h2>Order Summary</h2>
-                        {cart.map((item, index) => (
-                            <div key={index}>
-                                <p>{item.name}</p>
-                                <p>{item.type}</p>
-                                <p>{item.syrup}</p>
-                                <p> {item.addon}</p>
+                <ProductTitle page={"checkout"} />
+                <div className="md:px-10 px-6 mt-3 pb-12 space-y-6 md:space-y-0">
+                <div className="mb-4">
+                    {cart.map((item, index) => {
+                    const extraFields = Object.keys(item)
+                        .filter((key) => !['name', 'count', 'price'].includes(key) && item[key] !== 'none') 
+                        .map((key) => item[key])
+                        .join(', ');
 
-                                <p>
-                                {item.count} x ${item.price}
-                                </p>
-                                <p>-------------</p>
-                            </div>
-                        ))}
-
-                        <h3>Total: ${transaction?.total.toFixed(2)}</h3>
+                    return (
+                        <p className="regular-not-bold-font text-2xl" key={index}>
+                            {index + 1}. {item.name}
+                            {extraFields ? `, ${extraFields}` : ''}
+                            ({item.count} x ${item.price})
+                            {index < cart.length - 1 ? ', ' : ''}
+                        </p>
+                    );
+                    })}
+                    <hr className="mt-2 border-dashed border-1 border-colorPrimary" />
+                    <h3 className="mt-2 regular-not-bold-font text-2xl text-right">
+                        Total: ${transaction?.total.toFixed(2)}
+                    </h3>
+                </div>
+                    
+                
+                    <div ref={paymentElementRef} id="payment-element"></div>
+                    <div className="mt-4">
+                        <Button
+                            onClick={handlePaymentClick}
+                            text={"Make Payment"}
+                            color={"bg-green-500"}
+                        />
                     </div>
                 </div>
-
-                
-                <div ref={paymentElementRef} id="payment-element"></div>
-                <Button
-                    onClick={handlePaymentClick}
-                    text={"Make Payment"}
-                    color={"bg-green-500"}
-                />
             </div>
         </div>
     );

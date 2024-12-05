@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { toggleTheme } from "../../services/redux/themeActions";
+import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa";
 import { MdDarkMode, MdOutlineLightMode } from "react-icons/md";
@@ -7,17 +10,17 @@ import LogoWhite from "../../assets/images/logo_white.png";
 
 export default function Header() {
   const location = useLocation();
-  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
+
+  const theme = useSelector((state) => state.theme.theme);
+  const dispatch = useDispatch();
+  
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const iconSize = screenWidth < 768 ? 22 : 27;
   const page = location.pathname.includes("merch") ? "merch" : "cafe";
   const nextPage = page === "merch" ? "cafe" : "merch";
 
-  const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light";
-    setTheme(newTheme);
-    document.documentElement.className = newTheme;
-    localStorage.setItem("theme", newTheme);
+  const handleToggle = () => {
+    dispatch(toggleTheme());
   };
 
   useEffect(() => {
@@ -43,7 +46,7 @@ export default function Header() {
           <button className="text-colorPrimary text-2xl">
             <Link to={"/" + nextPage}>{nextPage.toUpperCase()}</Link>
           </button>
-          <button className="text-colorPrimary" onClick={toggleTheme}>
+          <button className="text-colorPrimary" onClick={handleToggle}>
             {theme === "light" ? (
               <MdDarkMode size={iconSize} />
             ) : (
