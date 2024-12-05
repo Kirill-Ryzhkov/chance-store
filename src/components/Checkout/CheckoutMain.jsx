@@ -4,8 +4,6 @@ import { useSelector } from 'react-redux';
 import Button from "../common/Button";
 import ProductTitle from "../common/ProductTitle";
 
-const APP_URL = process.env.REACT_APP_ORIGINAL_URL;
-
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_TEST_KEY);
 
 export default function CheckoutMain ({ cart, transaction }) {
