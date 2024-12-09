@@ -22,7 +22,7 @@ export default function Final () {
                 <div className="md:w-4/5 w-full h-full shadow-lg">
                     <div className="flex flex-col items-center justify-center text-center w-full mt-6">
                         <h1 className="md:text-7xl text-5xl regular-bold-font">Thanks for your order</h1>
-                        <p className="md:text-5xl text-3xl regular-bold-font mt-4">Your order number is 123</p>
+                        <p className="md:text-5xl text-3xl regular-bold-font mt-4">Your order number is {data?.order_number}</p>
                         <Link to="/" className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
                             Go Home
                         </Link>
