@@ -32,7 +32,52 @@ export const apiSlice = createApi({
         method: "POST",
         body: { paymentIntentId }
       })
-    })
+    }),
+    getAllStore: builder.query({
+      query: () => `/store/all`
+    }),
+    login: builder.mutation({
+      query: ({ email, password }) => ({
+        url: `/user/signin`,
+        method: "POST",
+        body: { email, password }
+      })
+    }),
+    verify: builder.mutation({
+      query: ({ token }) => ({
+        url: `/user/verify`,
+        method: "POST",
+        body: { token }
+      })
+    }),
+    createProduct: builder.mutation({
+      query: (formData) => ({
+        url: `/store/create`,
+        method: "POST",
+        body: formData,
+        formData: true
+      })
+    }),
+    updateProduct: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `/store/update/${id}`,
+        method: "POST",
+        body: data,
+        formData: true
+      })
+    }),
+    deleteProduct: builder.mutation({
+      query: ({ id }) => ({
+        url: `/store/delete/${id}`,
+        method: "DELETE"
+      })
+    }),
+    deleteField: builder.mutation({
+      query: ({ id }) => ({
+        url: `/store/field/delete/${id}`,
+        method: "DELETE"
+      })
+    }),
   }),
 });
 
@@ -41,5 +86,12 @@ export const {
   useGetStoreMultipleMutation,
   useGetStoreSingleQuery,
   useGetStoreTransactionMutation,
-  useGetStoreTransactionConfirmMutation
+  useGetStoreTransactionConfirmMutation,
+  useGetAllStoreQuery,
+  useLoginMutation,
+  useVerifyMutation,
+  useCreateProductMutation,
+  useUpdateProductMutation,
+  useDeleteProductMutation,
+  useDeleteFieldMutation
 } = apiSlice;
