@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import Product from "../components/Home/Product";
 import { useGetStoreMultipleMutation } from "../services/redux/apiSlice";
+import Loader from "../components/common/Loader";
 
 export default function Home({ page }) {
   const [getStoreMultiple, { data, isLoading, isError }] =
@@ -10,7 +11,12 @@ export default function Home({ page }) {
     getStoreMultiple({ type: page });
   }, [page, getStoreMultiple]);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading)
+    return (
+      <div>
+        <Loader />;
+      </div>
+    );
   if (isError) return <div>Error loading products</div>;
 
   return (

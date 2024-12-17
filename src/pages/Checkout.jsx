@@ -2,10 +2,14 @@ import React, { useEffect, useMemo } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import CheckoutMain from "../components/Checkout/CheckoutMain";
 import { useGetStoreTransactionMutation } from "../services/redux/apiSlice";
+import Loader from "../components/common/Loader";
 
 export default function Checkout() {
   const location = useLocation();
-  const cart = useMemo(() => location.state?.cart || [], [location.state?.cart]);
+  const cart = useMemo(
+    () => location.state?.cart || [],
+    [location.state?.cart]
+  );
   const { page } = useParams();
   localStorage.setItem(`cart_${page}`, "[]");
 
@@ -16,12 +20,12 @@ export default function Checkout() {
     getStoreTransaction({ cart });
   }, [cart, getStoreTransaction]);
 
-  if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error loading data</div>;
+  if (isLoading) return <Loader />;
+  if (isError) return <div>Error...</div>;
 
   return (
     <div className="bg-background min-h-screen text-colorPrimary flex">
-      <CheckoutMain cart={cart} transaction={data}/>
+      <CheckoutMain cart={cart} transaction={data} />
     </div>
   );
 }
