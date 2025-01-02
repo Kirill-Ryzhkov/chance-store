@@ -18,6 +18,7 @@ export default function Home({ page }) {
       </div>
     );
   if (isError) return <div>Error loading products</div>;
+  if (!data || !data.items) return <div>No products found</div>;
 
   return (
     <div className="bg-background min-h-screen text-colorPrimary flex">

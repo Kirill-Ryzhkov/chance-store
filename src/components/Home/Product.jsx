@@ -3,6 +3,18 @@ import ProductTile from "./ProductTile";
 import ProductTitle from "../common/ProductTitle";
 
 export default function Product({ page, products }) {
+
+  if (!products?.items || !Array.isArray(products.items)) {
+    return (
+      <div className="min-h-svh w-full flex justify-center">
+        <div className="md:w-4/5 w-full h-full shadow-lg">
+          <ProductTitle page={page} />
+          <div className="p-4">No products available</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-svh w-full flex justify-center">
       <div className="md:w-4/5 w-full h-full shadow-lg">

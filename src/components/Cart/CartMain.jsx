@@ -13,7 +13,7 @@ export default function CartMain({ cart, page, setCart }) {
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const navigate = useNavigate();
 
-  const { data: cafeFields, isLoading, isError } = useGetStoreFieldsQuery(page);
+  const { cafeFields, isLoading, isError } = useGetStoreFieldsQuery(page);
   const handleCheckout = () => {
     navigate(`/checkout/${page}`, { state: { cart } });
   };
