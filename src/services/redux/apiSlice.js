@@ -12,7 +12,7 @@ const delayedFetchBaseQuery = async (args, api, extraOptions) => {
 
 export const apiSlice = createApi({
   reducerPath: "api",
-  baseQuery: delayedFetchBaseQuery, // Используем модифицированный fetchBaseQuery
+  baseQuery: delayedFetchBaseQuery,
   endpoints: (builder) => ({
     getStoreFields: builder.query({
       query: (page) => `/store/field/list/${page}`,
@@ -145,7 +145,6 @@ export const apiSlice = createApi({
         url: `/store/field/delete/${id}`,
         method: "DELETE"
       })
-      }),
     }),
   }),
 });
