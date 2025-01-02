@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useUpdateProductMutation } from '../../../services/redux/apiSlice';
+import { useUpdateProductMutation, useUpdateFieldMutation } from '../../../services/redux/apiSlice';
 import { useNavigate } from 'react-router-dom';
 
 const IMAGE_URL = process.env.REACT_APP_IMAGE_SERVER;
 
-export default function EditMain({ product }) {
+export default function EditMain({ product, type }) {
     const navigate = useNavigate();
     const [updateProduct] = useUpdateProductMutation();
+    const [updateField] = useUpdateFieldMutation();
     const excludedFields = ["createdAt", "updatedAt", "__v", "_id"];
     const [formData, setFormData] = useState(product || {});
     const [imagePreview, setImagePreview] = useState(
@@ -16,6 +17,8 @@ export default function EditMain({ product }) {
     useEffect(() => {
       if (product) {
         setFormData(product);
+      }
+      if (product.image) {
         setImagePreview(product.image ? `${IMAGE_URL}${product.image}` : "");
       }
     }, [product]);
@@ -41,24 +44,25 @@ export default function EditMain({ product }) {
         e.preventDefault();
 
         const formDataToSend = new FormData();
-        formDataToSend.append('name', formData.name);
-        formDataToSend.append('slug', formData.slug);
-        formDataToSend.append('type', formData.type);
-        formDataToSend.append('price', formData.price);
-        if (formData.image instanceof File) {
-          formDataToSend.append('image', formData.image);
-        }
+
+        Object.entries(formData).forEach(([key, value]) => {
+          formDataToSend.append(key, value);
+        });
 
         try {
-          await updateProduct({ id: product._id, data: formDataToSend }).unwrap();
-          navigate('/admin/cafe');
+          if(type === "store") {
+            await updateProduct({ id: product._id, data: formDataToSend }).unwrap();
+          } else if (type === "storeFields") {
+            await updateField({ id: product._id, data: formDataToSend }).unwrap();
+          }
+          navigate(`/admin/${product.type}`);
         } catch (error) {
           console.error('Error updating product:', error);
         }
     };
 
     const handleCancel = () => {
-      navigate('/admin/cafe');
+      navigate(`/admin/${product.type}`);
     }
 
   return (

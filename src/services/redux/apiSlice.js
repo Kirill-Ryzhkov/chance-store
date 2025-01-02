@@ -34,7 +34,40 @@ export const apiSlice = createApi({
       })
     }),
     getAllStore: builder.query({
-      query: () => `/store/all`
+      query: () => `/store/all`,
+      providesTags: (result) => {
+        if (result) {
+          const storeTags = result.store?.map(({ _id }) => ({ 
+            type: 'Store', 
+            id: _id 
+          })) || [];
+          
+          const cafeTags = result.storeCafeFields?.map(({ _id }) => ({ 
+            type: 'StoreField', 
+            id: `cafe_${_id}` 
+          })) || [];
+          
+          const merchTags = result.storeMerchFields?.map(({ _id }) => ({ 
+            type: 'StoreField', 
+            id: `merch_${_id}` 
+          })) || [];
+          
+          return [
+            ...storeTags,
+            ...cafeTags,
+            ...merchTags,
+            { type: 'Store', id: 'LIST' },
+            { type: 'StoreCafeField', id: 'LIST' },
+            { type: 'StoreMerchField', id: 'LIST' }
+          ];
+        }
+        
+        return [
+          { type: 'Store', id: 'LIST' },
+          { type: 'StoreCafeField', id: 'LIST' },
+          { type: 'StoreMerchField', id: 'LIST' }
+        ];
+      }
     }),
     login: builder.mutation({
       query: ({ email, password }) => ({
@@ -56,7 +89,8 @@ export const apiSlice = createApi({
         method: "POST",
         body: formData,
         formData: true
-      })
+      }),
+      invalidatesTags: [{ type: 'Store', id: 'LIST' }],
     }),
     updateProduct: builder.mutation({
       query: ({ id, data }) => ({
@@ -64,13 +98,39 @@ export const apiSlice = createApi({
         method: "POST",
         body: data,
         formData: true
-      })
+      }),
+      invalidatesTags: (result, error, { id }) => [
+        { type: 'Store', id },
+        { type: 'Store', id: 'LIST' }
+      ],
     }),
     deleteProduct: builder.mutation({
       query: ({ id }) => ({
         url: `/store/delete/${id}`,
         method: "DELETE"
-      })
+      }),
+      invalidatesTags: (result, error, { id }) => [{ type: 'Store', id }],
+    }),
+    createField: builder.mutation({
+      query: (formData) => ({
+        url: `/store/field/create`,
+        method: "POST",
+        body: formData,
+        formData: true
+      }),
+      invalidatesTags: [{ type: 'StoreField', id: 'LIST' }],
+    }),
+    updateField: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `/store/field/update/${id}`,
+        method: "POST",
+        body: data,
+        formData: true
+      }),
+      invalidatesTags: (result, error, { id }) => [
+        { type: 'StoreField', id },
+        { type: 'StoreField', id: 'LIST' }
+      ],
     }),
     deleteField: builder.mutation({
       query: ({ id }) => ({
@@ -93,5 +153,7 @@ export const {
   useCreateProductMutation,
   useUpdateProductMutation,
   useDeleteProductMutation,
+  useCreateFieldMutation,
+  useUpdateFieldMutation,
   useDeleteFieldMutation
 } = apiSlice;

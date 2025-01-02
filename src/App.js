@@ -12,7 +12,7 @@ import Layout from "./components/Layout/Layout";
 import { useGetAllStoreQuery } from "./services/redux/apiSlice";
 
 function App() {
-  const { data } = useGetAllStoreQuery();
+  useGetAllStoreQuery();
 
   return (
     <BrowserRouter>
@@ -25,12 +25,14 @@ function App() {
           <Route path="/cart/:page" element={<Cart />} />
           <Route path="/checkout/:page" element={<Checkout />} />
           <Route path="/final" element={<Final />} />
-          <Route path="/admin" element={<AdminLogin />} />
-          <Route path="/admin/cafe" element={<AdminHome all={data} page={"cafe"}/>} />
-          <Route path="/admin/merch" element={<AdminHome all={data} page={"merch"}/>} />
-          <Route path="/admin/edit/product/:name" element={<AdminEdit type={"store"} all={data} />} />
-          <Route path="/admin/edit/field/:name" element={<AdminEdit type={"storeField"} all={data} />} />
-          <Route path="/admin/create/product" element={<AdminCreate type={"store"} all={data}/>} />
+
+          {/* <Route path="/admin" element={<AdminLogin />} />
+          <Route path="/admin/cafe" element={<AdminHome page={"cafe"}/>} />
+          <Route path="/admin/merch" element={<AdminHome page={"merch"}/>} />
+          <Route path="/admin/edit/product/:name" element={<AdminEdit type={"store"} />} />
+          <Route path="/admin/edit/field/:name" element={<AdminEdit type={"storeFields"} />} />
+          <Route path="/admin/create/product" element={<AdminCreate type={"store"} />} />
+          <Route path="/admin/create/field/cafe" element={<AdminCreate type={"storeFields"} page={"cafe"}/>} /> */}
         </Routes>
       </Layout>
     </BrowserRouter>
