@@ -2,9 +2,17 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
+const delayedFetchBaseQuery = async (args, api, extraOptions) => {
+  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  const baseQuery = fetchBaseQuery({ baseUrl: API_URL });
+  await delay(1500);
+
+  return baseQuery(args, api, extraOptions);
+};
+
 export const apiSlice = createApi({
   reducerPath: "api",
-  baseQuery: fetchBaseQuery({ baseUrl: API_URL }),
+  baseQuery: delayedFetchBaseQuery, // Используем модифицированный fetchBaseQuery
   endpoints: (builder) => ({
     getStoreFields: builder.query({
       query: (page) => `/store/field/list/${page}`,
@@ -23,8 +31,8 @@ export const apiSlice = createApi({
       query: ({ cart }) => ({
         url: `/store/checkout`,
         method: "POST",
-        body: { cart }
-      })
+        body: { cart },
+      }),
     }),
     getStoreTransactionConfirm: builder.mutation({
       query: ({ paymentIntentId }) => ({
@@ -137,6 +145,7 @@ export const apiSlice = createApi({
         url: `/store/field/delete/${id}`,
         method: "DELETE"
       })
+      }),
     }),
   }),
 });

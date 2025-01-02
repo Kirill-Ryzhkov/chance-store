@@ -7,6 +7,7 @@ import UnderLine from "../common/UnderLine";
 import EmptyCart from "./EmptyCart";
 import { useGetStoreFieldsQuery } from "../../services/redux/apiSlice";
 import { useNavigate } from "react-router-dom";
+import Loader from "../common/Loader";
 
 export default function CartMain({ cart, page, setCart }) {
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
@@ -23,7 +24,7 @@ export default function CartMain({ cart, page, setCart }) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <Loader />;
   if (isError) return <div>Error loading data</div>;
 
   return (
@@ -43,7 +44,11 @@ export default function CartMain({ cart, page, setCart }) {
               />
             ))}
             <div className="sticky mt-2 bottom-2 right-0">
-              <Button onClick={handleCheckout} text={"Checkout"} color={"bg-green-500"}/>
+              <Button
+                onClick={handleCheckout}
+                text={"Checkout"}
+                color={"bg-green-500"}
+              />
             </div>
           </div>
         ) : (
@@ -55,7 +60,11 @@ export default function CartMain({ cart, page, setCart }) {
               setCart={setCart}
             />
             <div className="w-full mt-4 sticky mt-2 bottom-2 right-0">
-              <Button onClick={handleCheckout} text={"Checkout"} color={"bg-green-500"}/>
+              <Button
+                onClick={handleCheckout}
+                text={"Checkout"}
+                color={"bg-green-500"}
+              />
             </div>
           </div>
         )
