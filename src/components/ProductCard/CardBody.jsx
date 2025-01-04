@@ -5,9 +5,16 @@ import UnderLine from '../common/UnderLine';
 import CardMain from './CardMain';
 import Button from '../common/Button';
 import ExtraField from './ExtraField';
+import Loader from '../common/Loader';
+import { useStatusStoreQuery } from '../../services/redux/apiSlice';
 
 export default function CardBody ({ data, page }) {
     const navigate = useNavigate();
+
+    const { data: statusStore, refetch } = useStatusStoreQuery();
+
+    const [status, setStatus] = useState(statusStore?.status?.open);
+    const [refreshing, setRefreshing] = useState(false);
 
     const [errorFields, setErrorFields] = useState({});
 
@@ -20,6 +27,14 @@ export default function CardBody ({ data, page }) {
     const [showNotification, setShowNotification] = useState(false);
 
     const fieldRefs = useRef({});
+
+    if (!data?.item || !data?.fields) {
+        return (
+            <div>
+                <Loader />
+            </div>
+        );
+    }
 
     const checkFilledFields = () => {
         const newErrorFields = {};
@@ -40,7 +55,15 @@ export default function CardBody ({ data, page }) {
     }
 
     const handleAddToCart = () => {
-        const cartName = `cart_${data?.item?.type}`;
+        const newStatus = statusStore?.status?.open;
+        refetch();
+        setStatus(newStatus);
+
+        if (!newStatus && page === "cafe") {
+            return;
+        }
+
+        const cartName = `cart_${data?.item[0].type}`;
 
         const hasError = checkFilledFields();
 
@@ -54,10 +77,10 @@ export default function CardBody ({ data, page }) {
             }
 
             const newOrder = { 
-                name: data?.item?.name, 
+                name: data?.item[0].slug,
                 count,
                 ...fieldList,
-                price: data?.item?.price
+                price: data?.item[0].price
             };
 
             let orderExists = false;
@@ -86,6 +109,14 @@ export default function CardBody ({ data, page }) {
     };
 
     const handleBuyNow = () => {
+        const newStatus = statusStore?.status?.open;
+        refetch();
+        setStatus(newStatus);
+
+        if (!newStatus && page === "cafe") {
+            return;
+        }
+
         const hasError = checkFilledFields();
 
         if (hasError) {
@@ -93,12 +124,25 @@ export default function CardBody ({ data, page }) {
             fieldRefs.current[firstErrorField.field_name]?.scrollIntoView({ behavior: 'smooth' });
         } else {
             const cart = [{
-                name: data?.item?.name, 
+                name: data?.item[0].slug,
                 count,
                 ...fieldList,
-                price: data?.item?.price
+                price: data?.item[0].price
             }];
             navigate(`/checkout/${page}`, { state: { cart } });
+        }
+    }
+
+    const refetchStatus = async () => {
+        setRefreshing(true);
+
+        try {
+            const { data } = await refetch();
+            setStatus(data?.status?.open);
+        } catch (error) {
+            console.error("Failed to refresh status:", error);
+        } finally {
+            setRefreshing(false);
         }
     }
 
@@ -116,16 +160,16 @@ export default function CardBody ({ data, page }) {
             <div className="relative md:px-10 px-6 mt-3 pb-12 flex flex-col md:flex-row space-y-6 md:space-y-0">
 
                 <div className="md:w-1/2 flex flex-col space-y-4">
-                    <CardMain product={data?.item} />
+                    <CardMain product={data?.item[0]} />
                     <ProductCounter count={count} increment={increment} decrement={decrement}/>
                 </div>
 
                 <div className="md:w-1/2 flex flex-col space-y-4">
 
-                    {data?.fields.map((item, index) => (
+                    {data?.fields?.map((item, index) => (
                         <React.Fragment key={index}>
                             <div ref={(el) => (fieldRefs.current[item.field_name] = el)}>
-                                <ExtraField 
+                                <ExtraField
                                     field={item} 
                                     setFieldList={setFieldList} 
                                     fieldList={fieldList} 
@@ -136,11 +180,22 @@ export default function CardBody ({ data, page }) {
                             <UnderLine />
                         </React.Fragment>
                     ))}
-                    <div className="sticky mt-2 bottom-2 right-0">
-                        <Button onClick={handleAddToCart} text={"Add to Cart"} color={"bg-green-500"}/>
-                        <Button onClick={handleBuyNow} text={"Buy now"} color={"bg-yellow-400"}/>
+                    <div className="sticky mt-2 bottom-2 right-0 text-center">
+                        {!status && page === 'cafe' && 
+                            <div className='bg-background'>
+                                <p className='text-xl'>The store is currently closed</p>
+                                <p className='text-xs'>{ refreshing ? "Refreshing..." : "If it remains closed for a long time, click the button below to refresh the status"}</p>
+                                <button
+                                    className="bg-blue-500 text-white px-4 py-2 rounded mt-2"
+                                    onClick={refetchStatus}
+                                >
+                                    Refresh Store Status
+                                </button>
+                            </div>
+                        }
+                        <Button disabled={!status && page === 'cafe'} onClick={handleAddToCart} text={"Add to Cart"} color={"bg-green-500"}/>
+                        <Button disabled={!status && page === 'cafe'}f onClick={handleBuyNow} text={"Buy now"} color={"bg-yellow-400"}/>
                     </div>
-                    
                 </div>
             </div>
         </>

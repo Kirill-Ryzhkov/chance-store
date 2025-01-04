@@ -4,7 +4,7 @@ import ProductTitle from "../common/ProductTitle";
 
 export default function Product({ page, products }) {
 
-  if (!products?.items || !Array.isArray(products.items)) {
+  if (!products || !Array.isArray(products)) {
     return (
       <div className="min-h-svh w-full flex justify-center">
         <div className="md:w-4/5 w-full h-full shadow-lg">
@@ -20,7 +20,7 @@ export default function Product({ page, products }) {
       <div className="md:w-4/5 w-full h-full shadow-lg">
         <ProductTitle page={page} />
         <div className="p-4 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-          {products?.items?.map((item, index) => (
+          {products?.map((item, index) => (
             <Link key={index} to={`/${page}/${item.slug}`}>
               <ProductTile item={item} />
             </Link>

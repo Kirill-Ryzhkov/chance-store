@@ -66,14 +66,14 @@ export const apiSlice = createApi({
             ...merchTags,
             { type: 'Store', id: 'LIST' },
             { type: 'StoreCafeField', id: 'LIST' },
-            { type: 'StoreMerchField', id: 'LIST' }
+            { type: 'StoreMerchField', id: 'LIST' },
           ];
         }
         
         return [
           { type: 'Store', id: 'LIST' },
           { type: 'StoreCafeField', id: 'LIST' },
-          { type: 'StoreMerchField', id: 'LIST' }
+          { type: 'StoreMerchField', id: 'LIST' },
         ];
       }
     }),
@@ -146,6 +146,9 @@ export const apiSlice = createApi({
         method: "DELETE"
       })
     }),
+    statusStore: builder.query({
+      query: () => `/event/statusCafe/Chance2025`,
+    }),
   }),
 });
 
@@ -163,5 +166,6 @@ export const {
   useDeleteProductMutation,
   useCreateFieldMutation,
   useUpdateFieldMutation,
-  useDeleteFieldMutation
+  useDeleteFieldMutation,
+  useStatusStoreQuery
 } = apiSlice;

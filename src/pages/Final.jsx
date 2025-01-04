@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import { useGetStoreTransactionConfirmMutation } from "../services/redux/apiSlice";
+import { useGetStoreTransactionConfirmMutation, apiSlice } from "../services/redux/apiSlice";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import Loader from "../components/common/Loader";
 
@@ -10,9 +11,15 @@ export default function Final() {
   const [getStoreTransactionConfirm, { data, isLoading, isError }] =
     useGetStoreTransactionConfirmMutation();
 
+  const dispatch = useDispatch();
+
   useEffect(() => {
     getStoreTransactionConfirm({ paymentIntentId });
   }, [paymentIntentId, getStoreTransactionConfirm]);
+
+  useEffect(() => {
+    dispatch(apiSlice.util.invalidateTags([{ type: 'StoreMerchField', id: 'LIST' }]));
+  });
 
   if (isLoading) return <Loader />;
   if (isError && !data?.success) return <div>Payment declined</div>;

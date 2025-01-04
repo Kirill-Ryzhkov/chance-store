@@ -3,6 +3,8 @@ import ProductCounter from "../ProductCard/ProductCounter";
 import { RiDeleteBin5Line } from "react-icons/ri";
 
 export default function CartTileMobile({ item, index, fields, setCart }) {
+    const excludedFields = ['name', 'count', 'price', 'delete'];
+    const filteredFields = fields.filter(field => !excludedFields.includes(field));
 
     const [count, setCount] = useState(item.count);
 
@@ -40,7 +42,7 @@ export default function CartTileMobile({ item, index, fields, setCart }) {
         <div className="relative w-full rounded-lg shadow-lg p-4 flex flex-col space-y-4 bg-background text-colorPrimary">   
             <div className="relative">
                 <h3 className="font-bold text-lg text-colorPrimary">{item.name}</h3>
-                    <p className="text-sm text-colorPrimary">{ fields
+                    <p className="text-sm text-colorPrimary">{ filteredFields
                         .map(field => item[field])
                         .filter(value => value !== "none")
                         .join(' · ')
