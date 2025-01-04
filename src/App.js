@@ -2,10 +2,6 @@ import Home from "./pages/Home";
 import ProductCard from "./pages/ProductCard";
 import Cart from "./pages/Cart";
 import Final from "./pages/Final";
-import AdminLogin from "./pages/admin/Login";
-import AdminHome from "./pages/admin/Home";
-import AdminEdit from "./pages/admin/Edit";
-import AdminCreate from "./pages/admin/Create";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Checkout from "./pages/Checkout";
 import Layout from "./components/Layout/Layout";
@@ -22,6 +18,7 @@ function App() {
           <Route path="/cafe" element={<Home page={"cafe"} />} />
           <Route path="/merch" element={<Home page={"merch"} />} />
           <Route path="/cafe/:slug" element={<ProductCard page="cafe" />} />
+          <Route path="/merch/:slug" element={<ProductCard page="merch" />} />
           <Route path="/cart/:page" element={<Cart />} />
           <Route path="/checkout/:page" element={<Checkout />} />
           <Route path="/final" element={<Final />} />

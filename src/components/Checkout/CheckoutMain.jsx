@@ -54,6 +54,7 @@ export default function CheckoutMain ({ cart, transaction }) {
                 elements: elementsRef.current,
                 confirmParams: {
                     return_url: 'https://thechance.xyz/final',
+                    // return_url: 'http://localhost:3000/final',
                 },
             });
 

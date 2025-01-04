@@ -2,7 +2,6 @@ import React from 'react';
 import ProductRadioList from '../common/ProductRadioList';
 
 export default function ExtraField ({ field, fieldList, setFieldList, error, setError }) {
-
     const handleChange = (fieldOption) => {
         const newFields = {...fieldList};
         newFields[field.field_name] = fieldOption;
@@ -20,7 +19,8 @@ export default function ExtraField ({ field, fieldList, setFieldList, error, set
                 <p className="text-red-500 text-sm mb-2">Please select one of the options.</p>
             )}
             <div className="flex flex-col space-y-2">
-                {field?.field_options?.map((option, index) => (
+            {Array.isArray(field?.field_options)
+                ? field.field_options.map((option, index) => (
                     <ProductRadioList
                         key={index}
                         label={option}
@@ -28,8 +28,16 @@ export default function ExtraField ({ field, fieldList, setFieldList, error, set
                         checked={fieldList[field.field_name] === option.toLowerCase()}
                         onChange={() => handleChange(option.toLowerCase())}
                     />
-                ))}
-                
+                ))
+                : Object.keys(field?.field_options || {}).map((key, index) => (
+                    <ProductRadioList
+                        key={index}
+                        label={`${key} (${field.field_options[key]} in stock)`}
+                        value={key.toLowerCase()}
+                        checked={fieldList[field.field_name] === key.toLowerCase()}
+                        onChange={() => handleChange(key.toLowerCase())}
+                    />
+            ))}
             </div>
         </div>
     );

@@ -5,17 +5,29 @@ import Button from "../common/Button";
 import ProductTitle from "../common/ProductTitle";
 import UnderLine from "../common/UnderLine";
 import EmptyCart from "./EmptyCart";
-import { useGetStoreFieldsQuery } from "../../services/redux/apiSlice";
 import { useNavigate } from "react-router-dom";
-import Loader from "../common/Loader";
+import { useSelector } from "react-redux";
+import { apiSlice } from "../../services/redux/apiSlice";
 
 export default function CartMain({ cart, page, setCart }) {
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const navigate = useNavigate();
 
-  const { cafeFields, isLoading, isError } = useGetStoreFieldsQuery(page);
+  const { data } = useSelector(apiSlice.endpoints.getAllStore.select());
+
+  let fields;
+  if(page === "cafe") {
+    fields = ['name', 'count', 'syrup', 'price', 'delete'];
+  } else {
+    fields = ['name', 'count', 'size', 'price', 'delete'];
+  }
+
   const handleCheckout = () => {
-    navigate(`/checkout/${page}`, { state: { cart } });
+    if(!data?.status?.open && page === "cafe"){
+      return "Store is closed";
+    } else {
+      navigate(`/checkout/${page}`, { state: { cart } });
+    }
   };
 
   useEffect(() => {
@@ -23,9 +35,6 @@ export default function CartMain({ cart, page, setCart }) {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
-  if (isLoading) return <Loader />;
-  if (isError) return <div>Error loading data</div>;
 
   return (
     <div className="w-full flex justify-center h-fit">
@@ -39,12 +48,13 @@ export default function CartMain({ cart, page, setCart }) {
                 key={index}
                 item={item}
                 index={index}
-                fields={cafeFields?.fields}
+                fields={fields}
                 setCart={setCart}
               />
             ))}
             <div className="sticky mt-2 bottom-2 right-0">
               <Button
+                disabled={!data?.status?.open && page === "cafe"}
                 onClick={handleCheckout}
                 text={"Checkout"}
                 color={"bg-green-500"}
@@ -55,9 +65,10 @@ export default function CartMain({ cart, page, setCart }) {
           <div className="flex flex-col w-4/5">
             <ProductTitle page={"Cart"} />
             <CartTable
-              fields={cafeFields?.fields}
+              fields={fields}
               cart={cart}
               setCart={setCart}
+              page={page}
             />
             <div className="w-full mt-4 sticky mt-2 bottom-2 right-0">
               <Button

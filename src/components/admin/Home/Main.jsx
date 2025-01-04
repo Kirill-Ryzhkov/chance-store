@@ -53,7 +53,6 @@ export default function Main({ name }) {
   const handleDeleteItem = async (id) => {
     try {
       await deleteProduct({ id }).unwrap();
-      // Redux will automatically update the cache using the provided tags
     } catch (error) {
       console.error('Error deleting item:', error);
     }
@@ -62,7 +61,6 @@ export default function Main({ name }) {
   const handleDeleteField = async (id) => {
     try {
       await deleteField({ id }).unwrap();
-      // Redux will automatically update the cache using the provided tags
     } catch (error) {
       console.error('Error deleting field:', error);
     }
