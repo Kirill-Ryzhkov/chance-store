@@ -63,7 +63,7 @@ export default function CardBody ({ data, page }) {
             return;
         }
 
-        const cartName = `cart_${data?.item[0].type}`;
+        const cartName = `cart_${page}`;
 
         const hasError = checkFilledFields();
 
