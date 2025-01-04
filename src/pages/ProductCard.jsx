@@ -9,8 +9,21 @@ export default function ProductCard({ page }) {
 
   const { data, isLoading, isError } = useSelector(apiSlice.endpoints.getAllStore.select());
 
-  const product = data?.store?.filter((item) => item.type === page && item.slug === slug);
-  const productFields = page === "cafe" ? data?.storeCafeFields : data?.storeMerchFields;
+  const product = data?.store?.filter((item) => item.slug === slug);
+  let productFields;
+
+  switch (product[0].type) {
+    case "cafe":
+      productFields = data?.storeCafeFields;
+      break;
+    case "merch":
+      productFields = data?.storeMerchFields;
+      break;
+    default:
+      productFields = [];
+      break;
+  }
+
   const productData = {
     item: product,
     fields: productFields,
