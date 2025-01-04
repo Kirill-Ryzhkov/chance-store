@@ -6,14 +6,16 @@ import ProductTitle from "../common/ProductTitle";
 import UnderLine from "../common/UnderLine";
 import EmptyCart from "./EmptyCart";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { apiSlice } from "../../services/redux/apiSlice";
+import { useStatusStoreQuery } from "../../services/redux/apiSlice";
+
 
 export default function CartMain({ cart, page, setCart }) {
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const navigate = useNavigate();
 
-  const { data } = useSelector(apiSlice.endpoints.getAllStore.select());
+  const { data: statusStore, refetch } = useStatusStoreQuery();
+  const [status, setStatus] = useState(statusStore?.status?.open);
+  const [refreshing, setRefreshing] = useState(false);
 
   let fields;
   if(page === "cafe") {
@@ -23,12 +25,25 @@ export default function CartMain({ cart, page, setCart }) {
   }
 
   const handleCheckout = () => {
-    if(!data?.status?.open && page === "cafe"){
+    if(!status && page === "cafe"){
       return "Store is closed";
     } else {
       navigate(`/checkout/${page}`, { state: { cart } });
     }
   };
+
+  const refetchStatus = async () => {
+      setRefreshing(true);
+
+      try {
+          const { data } = await refetch();
+          setStatus(data?.status?.open);
+      } catch (error) {
+          console.error("Failed to refresh status:", error);
+      } finally {
+          setRefreshing(false);
+      }
+  }
 
   useEffect(() => {
     const handleResize = () => setScreenWidth(window.innerWidth);
@@ -52,13 +67,25 @@ export default function CartMain({ cart, page, setCart }) {
                 setCart={setCart}
               />
             ))}
-            <div className="sticky mt-2 bottom-2 right-0">
-              <Button
-                disabled={!data?.status?.open && page === "cafe"}
-                onClick={handleCheckout}
-                text={"Checkout"}
-                color={"bg-green-500"}
-              />
+            <div className="sticky mt-2 bottom-2 right-0 text-center">
+                {!status && page === 'cafe' && 
+                    <div className='bg-background'>
+                        <p className='text-xl'>The store is currently closed</p>
+                        <p className='text-xs'>{ refreshing ? "Refreshing..." : "If it remains closed for a long time, click the button below to refresh the status"}</p>
+                        <button
+                            className="bg-blue-500 text-white px-4 py-2 rounded mt-2"
+                            onClick={refetchStatus}
+                        >
+                            Refresh Store Status
+                        </button>
+                    </div>
+                }
+                <Button
+                  disabled={!status && page === 'cafe'}
+                  onClick={handleCheckout}
+                  text={"Checkout"}
+                  color={"bg-green-500"}
+                />
             </div>
           </div>
         ) : (
@@ -70,12 +97,25 @@ export default function CartMain({ cart, page, setCart }) {
               setCart={setCart}
               page={page}
             />
-            <div className="w-full mt-4 sticky mt-2 bottom-2 right-0">
-              <Button
-                onClick={handleCheckout}
-                text={"Checkout"}
-                color={"bg-green-500"}
-              />
+            <div className="w-full mt-4 sticky mt-2 bottom-2 right-0 text-center">
+                {!status && page === 'cafe' && 
+                    <div className='bg-background'>
+                        <p className='text-xl'>The store is currently closed</p>
+                        <p className='text-xs'>{ refreshing ? "Refreshing..." : "If it remains closed for a long time, click the button below to refresh the status"}</p>
+                        <button
+                            className="bg-blue-500 text-white px-4 py-2 rounded mt-2"
+                            onClick={refetchStatus}
+                        >
+                            Refresh Store Status
+                        </button>
+                    </div>
+                }
+                <Button
+                  disabled={!status && page === 'cafe'}
+                  onClick={handleCheckout}
+                  text={"Checkout"}
+                  color={"bg-green-500"}
+                />
             </div>
           </div>
         )
