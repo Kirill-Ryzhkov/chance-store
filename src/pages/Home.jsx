@@ -7,7 +7,12 @@ import Loader from "../components/common/Loader";
 export default function Home({ page }) {
   const { data, isLoading, isError } = useSelector(apiSlice.endpoints.getAllStore.select());
 
-  const dataFilter = data?.store?.filter((item) => item.type === page);
+  let dataFilter;
+  if(page === "cafe") {
+    dataFilter = data?.store?.filter((item) => item.type === page || item.type === "tea");
+  } else {
+    dataFilter = data?.store?.filter((item) => item.type === page);
+  }
 
   if (isLoading)
     return (
