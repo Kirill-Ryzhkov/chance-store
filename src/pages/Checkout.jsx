@@ -6,11 +6,17 @@ import Loader from "../components/common/Loader";
 
 export default function Checkout() {
   const location = useLocation();
-  const cart = useMemo(
-    () => location.state?.cart || [],
-    [location.state?.cart]
-  );
   const { page } = useParams();
+
+  let cart = useMemo(
+    () =>
+      (location.state?.cart || []).map((item) => ({
+        ...item,
+        type: page,
+      })),
+    [location.state?.cart, page]
+  );
+
   localStorage.setItem(`cart_${page}`, "[]");
 
   const [getStoreTransaction, { data, isLoading, isError }] =
