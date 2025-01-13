@@ -29,14 +29,16 @@ export default function ExtraField ({ field, fieldList, setFieldList, error, set
                         onChange={() => handleChange(option.toLowerCase())}
                     />
                 ))
-                : Object.keys(field?.field_options || {}).map((key, index) => (
-                    <ProductRadioList
-                        key={index}
-                        label={`${key} (${field.field_options[key]} in stock)`}
-                        value={key.toLowerCase()}
-                        checked={fieldList[field.field_name] === key.toLowerCase()}
-                        onChange={() => handleChange(key.toLowerCase())}
-                    />
+                : Object.keys(field?.field_options || {})
+                    .filter(key => field.field_options[key] > 0)
+                    .map((key, index) => (
+                        <ProductRadioList
+                            key={index}
+                            label={`${key} (${field.field_options[key]} in stock)`}
+                            value={key.toLowerCase()}
+                            checked={fieldList[field.field_name] === key.toLowerCase()}
+                            onChange={() => handleChange(key.toLowerCase())}
+                        />
             ))}
             </div>
         </div>
