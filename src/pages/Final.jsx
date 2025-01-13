@@ -19,7 +19,7 @@ export default function Final() {
 
   useEffect(() => {
     dispatch(apiSlice.util.invalidateTags([{ type: 'StoreMerchField', id: 'LIST' }]));
-  });
+  }, [dispatch]);
 
   if (isLoading) return <Loader />;
   if (isError && !data?.success) return <div>Payment declined</div>;

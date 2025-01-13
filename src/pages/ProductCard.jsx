@@ -24,9 +24,16 @@ export default function ProductCard({ page }) {
       break;
   }
 
+  let fields;
+  if (productFields.length > 0 && product[0].type === 'merch') {
+    fields = productFields.filter(item => item.slug === slug);
+  } else {
+    fields = productFields;
+  }
+
   const productData = {
     item: product,
-    fields: productFields,
+    fields,
     open: data?.status?.open
   };
 

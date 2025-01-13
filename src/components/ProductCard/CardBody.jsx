@@ -13,7 +13,7 @@ export default function CardBody ({ data, page }) {
 
     const { data: statusStore, refetch } = useStatusStoreQuery();
 
-    const [status, setStatus] = useState(statusStore?.status?.open);
+    const [status, setStatus] = useState(statusStore?.status?.open || true);
     const [refreshing, setRefreshing] = useState(false);
 
     const [errorFields, setErrorFields] = useState({});
@@ -25,6 +25,7 @@ export default function CardBody ({ data, page }) {
     const [fieldList, setFieldList] = useState({});
 
     const [showNotification, setShowNotification] = useState(false);
+    const [textNotification, setTextNotification] = useState('');
 
     const fieldRefs = useRef({});
 
@@ -76,6 +77,19 @@ export default function CardBody ({ data, page }) {
                 cart = [];
             }
 
+            if (page === 'merch') {
+                const name = Object.keys(fieldList)[0];
+                const size = data?.fields.filter(item => item.field_name === name)[0].field_options;
+                const maxCount = size[fieldList[name]];
+                if (count > maxCount) {
+                    setCount(maxCount);
+                    setTextNotification('Max count is 10')
+                    setShowNotification(true);
+                    setTimeout(() => setShowNotification(false), 2000);
+                    return;
+                }
+            }
+
             const newOrder = { 
                 name: data?.item[0].slug,
                 count,
@@ -103,6 +117,7 @@ export default function CardBody ({ data, page }) {
 
             localStorage.setItem(cartName, JSON.stringify(cart));
 
+            setTextNotification('Your order has been added to the cart!')
             setShowNotification(true);
             setTimeout(() => setShowNotification(false), 3000);
         }
@@ -123,6 +138,20 @@ export default function CardBody ({ data, page }) {
             const firstErrorField = data?.fields.find((field) => !fieldList[field.field_name]);
             fieldRefs.current[firstErrorField.field_name]?.scrollIntoView({ behavior: 'smooth' });
         } else {
+
+            if (page === 'merch') {
+                const name = Object.keys(fieldList)[0];
+                const size = data?.fields.filter(item => item.field_name === name)[0].field_options;
+                const maxCount = size[fieldList[name]];
+                if (count > maxCount) {
+                    setCount(maxCount);
+                    setTextNotification('Max count is 10')
+                    setShowNotification(true);
+                    setTimeout(() => setShowNotification(false), 2000);
+                    return;
+                }
+            }
+
             const cart = [{
                 name: data?.item[0].slug,
                 count,
@@ -153,7 +182,7 @@ export default function CardBody ({ data, page }) {
                     <div className="fixed h-screen inset-0 bg-black opacity-50 z-40"></div>
                     
                     <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 bg-green-500 text-white py-2 px-6 rounded-md shadow-md z-50">
-                        Your order has been added to the cart!
+                        {textNotification}
                     </div>
                 </>
             )}
@@ -193,8 +222,18 @@ export default function CardBody ({ data, page }) {
                                 </button>
                             </div>
                         }
-                        <Button disabled={!status && page === 'cafe'} onClick={handleAddToCart} text={"Add to Cart"} color={"bg-green-500"}/>
-                        <Button disabled={!status && page === 'cafe'}f onClick={handleBuyNow} text={"Buy now"} color={"bg-yellow-400"}/>
+                        <Button 
+                            disabled={(!status && page === 'cafe')}
+                            onClick={handleAddToCart}
+                            text={"Add to Cart"}
+                            color={"bg-green-500"}
+                        />
+                        <Button 
+                            disabled={!status && page === 'cafe'}
+                            onClick={handleBuyNow}
+                            text={"Buy now"}
+                            color={"bg-yellow-400"}
+                        />
                     </div>
                 </div>
             </div>
