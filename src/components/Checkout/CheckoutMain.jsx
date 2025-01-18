@@ -101,8 +101,8 @@ export default function CheckoutMain ({ cart, transaction, page }) {
             const { error } = await stripeRef.current.confirmPayment({
                 elements: elementsRef.current,
                 confirmParams: {
-                    // return_url: 'https://thechance.xyz/final',
-                    return_url: 'http://localhost:3000/final',
+                    return_url: 'https://thechance.xyz/final',
+                    // return_url: 'http://localhost:3000/final',
                 },
             });
 
