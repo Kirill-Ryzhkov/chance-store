@@ -31,7 +31,7 @@ export default function Checkout() {
 
   return (
     <div className="bg-background min-h-screen text-colorPrimary flex">
-      <CheckoutMain cart={cart} transaction={data} />
+      <CheckoutMain cart={cart} transaction={data} page={page} />
     </div>
   );
 }

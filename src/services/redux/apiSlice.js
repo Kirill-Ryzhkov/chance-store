@@ -149,6 +149,19 @@ export const apiSlice = createApi({
     statusStore: builder.query({
       query: () => `/event/statusCafe/Chance2025`,
     }),
+    createMerchOrder: builder.mutation({
+      query: ({ first_name, last_name, email, phone, intent_id }) => ({
+        url: `/store/merchOrder`,
+        method: "POST",
+        body: {
+          first_name,
+          last_name,
+          email,
+          phone,
+          intent_id
+        },
+      })
+    }),
   }),
 });
 
@@ -167,5 +180,6 @@ export const {
   useCreateFieldMutation,
   useUpdateFieldMutation,
   useDeleteFieldMutation,
-  useStatusStoreQuery
+  useStatusStoreQuery,
+  useCreateMerchOrderMutation
 } = apiSlice;
