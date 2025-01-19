@@ -25,6 +25,8 @@ export default function CheckoutMain ({ cart, transaction, page }) {
 
     const [errors, setErrors] = useState({});
 
+    const [isLoading, setIsLoading] = useState(false);
+
     useEffect(() => {
         
         const initialize = async () => {
@@ -57,6 +59,10 @@ export default function CheckoutMain ({ cart, transaction, page }) {
     }, [transaction, theme]);
 
     const handlePaymentClick = async () => {
+        if (isLoading) return;
+
+        setIsLoading(true);
+
         if (!stripeRef.current || !elementsRef.current) {
             console.error("Stripe or Elements not initialized");
             return;
@@ -85,6 +91,7 @@ export default function CheckoutMain ({ cart, transaction, page }) {
                     fieldElement.scrollIntoView({ behavior: "smooth", block: "center" });
                     fieldElement.focus();
                 }
+                setIsLoading(false);
                 return;
             }
             await createMerchOrder({
@@ -101,21 +108,26 @@ export default function CheckoutMain ({ cart, transaction, page }) {
             const { error } = await stripeRef.current.confirmPayment({
                 elements: elementsRef.current,
                 confirmParams: {
-                    return_url: 'https://thechance.xyz/final',
-                    // return_url: 'http://localhost:3000/final',
+                    // return_url: 'https://thechance.xyz/final',
+                    return_url: 'http://localhost:3000/final',
                 },
             });
 
             if (error) {
+                setIsLoading(false);
                 console.error("Payment failed:", error.message);
             }
         } catch (err) {
+            setIsLoading(false);
             console.error("Unexpected error:", err);
         }
     }
 
     return (
         <div className="min-h-svh w-full flex justify-center">
+            {isLoading && 
+                <div className="fixed inset-0 bg-black bg-opacity-30 z-50 flex justify-center items-center"></div>
+            }
             <div className="md:w-4/5 w-full h-full shadow-lg">
                 <ProductTitle page={"checkout"} />
                 <div className="md:px-10 px-6 mt-3 pb-12 space-y-6 md:space-y-0">
@@ -152,6 +164,8 @@ export default function CheckoutMain ({ cart, transaction, page }) {
                             onClick={handlePaymentClick}
                             text={"Make Payment"}
                             color={"bg-green-500"}
+                            disabled={isLoading}
+                            isLoading={isLoading} 
                         />
                     </div>
                 </div>

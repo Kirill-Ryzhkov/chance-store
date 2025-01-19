@@ -172,6 +172,7 @@ export const {
   useGetStoreTransactionMutation,
   useGetStoreTransactionConfirmMutation,
   useGetAllStoreQuery,
+  useLazyGetAllStoreQuery,
   useLoginMutation,
   useVerifyMutation,
   useCreateProductMutation,

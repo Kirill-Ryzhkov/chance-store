@@ -56,3 +56,13 @@
   font-style: normal;
   font-variation-settings: "slnt" 0;
 }
+
+.loader {
+  border: 2px solid #fff;
+  border-left-color: transparent;
+  border-radius: 50%;
+  width: 1em;
+  height: 1em;
+  animation: spin 1s linear infinite;
+  margin: 0 auto; 
+}

@@ -22,6 +22,10 @@ module.exports = {
         colorPrimary: "var(--colorPrimary)",
         colorSecond: "var(--colorSecond)",
       },
+      animation: {
+        'spin-fast': 'spin 0.5s linear infinite',
+        'spin-slow': 'spin 2s linear infinite',
+      }
     },
   },
   safelist: [
