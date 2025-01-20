@@ -1,8 +1,14 @@
 version: '3.8'
 
 services:
-  frontend:
+  store-frontend:
     build: .
-    container_name: my-store-app
-    ports:
-      - "3000:80"
+    container_name: store-frontend
+    networks:
+      - shared_network
+#    ports:
+#      - "3000:80"
+
+networks:
+  shared_network:
+    external: true
