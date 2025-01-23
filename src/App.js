@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Checkout from "./pages/Checkout";
 import Layout from "./components/Layout/Layout";
 import { useGetAllStoreQuery } from "./services/redux/apiSlice";
+import { OrdersTable } from "./pages/admin/OrdersTable";
 
 function App() {
   useGetAllStoreQuery();
@@ -23,8 +24,8 @@ function App() {
           <Route path="/checkout/:page" element={<Checkout />} />
           <Route path="/final" element={<Final />} />
 
-          {/* <Route path="/admin" element={<AdminLogin />} />
-          <Route path="/admin/cafe" element={<AdminHome page={"cafe"}/>} />
+          <Route path="/admin" element={<OrdersTable />} />
+          {/* <Route path="/admin/cafe" element={<AdminHome page={"cafe"}/>} />
           <Route path="/admin/merch" element={<AdminHome page={"merch"}/>} />
           <Route path="/admin/edit/product/:name" element={<AdminEdit type={"store"} />} />
           <Route path="/admin/edit/field/:name" element={<AdminEdit type={"storeFields"} />} />
