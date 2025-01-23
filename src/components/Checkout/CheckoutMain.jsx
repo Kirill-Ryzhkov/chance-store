@@ -6,7 +6,7 @@ import ProductTitle from "../common/ProductTitle";
 import MerchForm from "./MerchForm";
 import { useCreateMerchOrderMutation } from "../../services/redux/apiSlice";
 
-const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_TEST_KEY);
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_LIVE_KEY);
 
 export default function CheckoutMain ({ cart, transaction, page }) {
     const [createMerchOrder] = useCreateMerchOrderMutation();
